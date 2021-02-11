@@ -1,20 +1,23 @@
 package com.twu.biblioteca.domain;
 
+import java.util.List;
+
 public class MenuItem {
 
-    private int id;
-    private String description;
+    private String title;
+    private String selector;
 
-    public MenuItem(int id, String description) {
-        this.id = id;
-        this.description = description;
+    public MenuItem(String title, String selector) {
+        this.title = title;
+        this.selector = selector;
     }
 
-    public int getId() {
-        return id;
+    public String getSelector() {
+        return selector;
     }
 
-    public String getDescription() {
-        return description;
+    public String getTitle() {
+        return title;
     }
+
 }

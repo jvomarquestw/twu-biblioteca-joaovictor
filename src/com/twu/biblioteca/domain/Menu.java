@@ -1,13 +1,20 @@
 package com.twu.biblioteca.domain;
 
+import com.twu.biblioteca.helper.Message;
+
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Menu {
 
     private List<MenuItem> menuItems;
 
-    public Menu() {
+    private Library library;
+
+    public Menu(Library library) {
+        this.library = library;
         this.menuItems = new ArrayList<MenuItem>();
     }
 
@@ -16,33 +23,48 @@ public class Menu {
     }
 
     public void addMenuItem(MenuItem menuItem){
-        this.menuItems.add((menuItem));
+        if(isMenuItemOnMenu(menuItem) == false)
+            this.menuItems.add((menuItem));
     }
 
-    public Boolean chooseMenuItem(int idMenuItem){
-
-        if(this.verifyIfMenuItemsListHasTheseMenuItem(idMenuItem) == true)
+    private Boolean isMenuItemOnMenu(MenuItem menuItem){
+        if(this.menuItems.stream().filter(x -> x.equals(menuItem)).findAny().orElse(null) != null)
             return true;
 
         return false;
     }
 
+    public String chooseMenuItem(String idMenuItem){
 
-
-    private Boolean verifyIfMenuItemsListHasTheseMenuItem(int idMenuItem){
-        if(this.menuItems.stream().filter(menuItem -> menuItem.getId() == idMenuItem).findAny().orElse(null) != null){
-            return true;
+        switch (idMenuItem){
+            case "1":
+                String allBooks = this.library.getAllBooksInStringFormat();
+                return allBooks;
+            case "2":
+                String checkout = this.library.checkoutABook();
+                return checkout;
+            case "3":
+                String returnABook = this.library.returnABook();
+                return returnABook;
+            case "0":
+                return Message.QUIT;
+            default:
+                return "Please select a valid option!";
         }
-        return false;
+
     }
 
-    public void showMenu(){
+    public String getContent(){
 
-        System.out.println("\nMenu - Biblioteca \n");
+        StringBuilder menuContent = new StringBuilder();
+        menuContent.append("\nMenu - Biblioteca \n");
         this.menuItems.forEach(
-                (MenuItem menuItem) ->
-                        System.out.println(menuItem.getDescription() + " (" + menuItem.getId() + ")"));
+                (MenuItem menuItem) -> menuContent.append("\n" + menuItem.getTitle() + " (" + menuItem.getSelector() + ")"));
 
-        System.out.printf("Choose an option: ");
+        menuContent.append("\n\nChoose an option: ");
+
+        return menuContent.toString();
     }
+
+
 }
